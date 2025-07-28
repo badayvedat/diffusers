@@ -1123,23 +1123,8 @@ class ModelMixin(torch.nn.Module, PushToHubMixin):
             elif not low_cpu_mem_usage:
                 raise ValueError("`low_cpu_mem_usage` cannot be False or None when using quantization.")
 
-        # Check if `_keep_in_fp32_modules` is not None
-        use_keep_in_fp32_modules = cls._keep_in_fp32_modules is not None and (
-            hf_quantizer is None or getattr(hf_quantizer, "use_keep_in_fp32_modules", False)
-        )
 
-        if use_keep_in_fp32_modules:
-            keep_in_fp32_modules = cls._keep_in_fp32_modules
-            if not isinstance(keep_in_fp32_modules, list):
-                keep_in_fp32_modules = [keep_in_fp32_modules]
-
-            if low_cpu_mem_usage is None:
-                low_cpu_mem_usage = True
-                logger.info("Set `low_cpu_mem_usage` to True as `_keep_in_fp32_modules` is not None.")
-            elif not low_cpu_mem_usage:
-                raise ValueError("`low_cpu_mem_usage` cannot be False when `keep_in_fp32_modules` is True.")
-        else:
-            keep_in_fp32_modules = []
+        keep_in_fp32_modules = []
 
         is_sharded = False
         resolved_model_file = None
